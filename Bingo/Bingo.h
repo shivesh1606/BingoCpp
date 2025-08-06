@@ -17,6 +17,7 @@ struct player
 
     string playerName;
     string playerPass;
+	bool isAI = false; // Flag to indicate if the player is an AI
     bool ithCardMap(int i,int j)
     {
 		return (card_map & (1 << (i * 5 + j))) != 0; // Check if the bit for the position (i, j) is set
@@ -38,5 +39,3 @@ int diagCount(player& user);
 bool gameComplete(player& userA, player& userB);
 void display_card(player& user, string& pass);
 void cutNumFromUser(player* user, int num);
-bool cut_num(player* user, bool random = false);
-void chance(player* user);

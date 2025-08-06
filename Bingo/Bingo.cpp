@@ -23,20 +23,33 @@ bool getPlayerCard(player& user)
     user.card = vector<vector<int>>(5, vector<int>(5));
     set<int> used;
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 5;)
     {
         cout << "Enter 5 numbers for row " << i + 1 << " (1-25): ";
+        bool rowCorrect = true;
         for (int j = 0; j < 5; j++)
         {
             int val = safeInput();
+
             if (val <= 0 || val > 25 || used.count(val))
             {
                 cout << "Invalid or duplicate number: " << val << "\n";
-                return false;
+				rowCorrect = false;
+                break;
             }
             user.card[i][j] = val;
             used.insert(val);
         }
+        if (!rowCorrect) {
+            for(int j = 0; j < 5; j++) {
+				used.erase(user.card[i][j]); // Remove the invalid numbers from the set
+                user.card[i][j] = 0; // Reset the row to zero if invalid
+                
+			}
+            cout << "Please enter the row again.\n";
+            continue; // Skip to the next iteration to re-enter the row
+		}
+        i++;
     }
     return true;
 }
@@ -177,53 +190,5 @@ void cutNumFromUser(player* user, int num) {
                 return;
             }
         }
-    }
-}
-bool cut_num(player* user, bool random) 
-{
-    int num;
-    if (random) {
-        num = rand() % 25 + 1; // Generate a random number between 1 and 25
-    }
-    else {
-        cout << "Enter the number to cut (1-25): ";
-        num = safeInput();
-    }
-
-    //  for (auto person : players) {
-          //cutNumFromUser(person, num); // Cut the number from all players' cards
-    //  }
-
-    cout << "Number " << num << " cut from both the card.\n";
-    return false;
-}
-void chance(player* user)
-{
-    clearScreen(); // <--- clear before showing menu
-    cout << user->playerName << " : Please enter password: ";
-    string pass;
-    cin >> pass;
-    display_card(*user, pass);
-    while (true)
-    {
-        cout << "Select Choice: 1.Enter Number to cut\n2.Cut Random Number\n";
-        int num;
-        num = safeInput();
-        switch (num)
-        {
-        case 1:
-            cut_num(user);
-            break;
-        case 2:
-            cut_num(user, true);
-            break;
-        default:
-            cout << "Wrong Choice\n";
-            continue;
-        }
-        cout << "Update Card:\n";
-        display_card(*user, pass);
-        cin >> num;
-        break;
     }
 }

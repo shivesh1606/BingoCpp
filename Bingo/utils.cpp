@@ -2,6 +2,9 @@
 #include <cstdlib>
 #include <limits>
 
+#define NOMINMAX
+#include <windows.h>
+
 void clearScreen() {
 #ifdef _WIN32
     system("cls");
@@ -15,7 +18,15 @@ int safeInput() {
     while (!(cin >> val)) {
         cout << "Invalid input. Try again: ";
         cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
     return val;
+}
+
+void sleep_for_sec(float seconds) {
+#ifdef _WIN32
+    Sleep(seconds * 1000); // Sleep takes milliseconds
+#else
+    sleep(seconds); // Sleep takes seconds
+#endif
 }
